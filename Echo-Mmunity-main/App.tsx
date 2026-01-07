@@ -194,17 +194,21 @@ const AuthScreen: React.FC<{
                 const { error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) throw error;
             } else {
-                const { data: authData, error: signUpError } = await supabase.auth.signUp({ email, password });
+                // UPDATED: Pass 'name' in options so the SQL Trigger can use it
+                const { error: signUpError } = await supabase.auth.signUp({ 
+                    email, 
+                    password,
+                    options: {
+                        data: {
+                            name: name // This sends the name to the database trigger
+                        }
+                    }
+                });
+                
                 if (signUpError) throw signUpError;
-                if (authData.user) {
-                    const { error: profileError } = await supabase.from('profiles').insert({
-                        id: authData.user.id,
-                        email,
-                        name,
-                        role: 'MEMBER'
-                    });
-                    if (profileError) throw profileError;
-                }
+                
+                // We removed the manual 'profiles.insert' code here because 
+                // the Database Trigger now does it automatically.
             }
             onLogin();
         } catch (error: any) {
