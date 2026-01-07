@@ -1,0 +1,8 @@
+{
+  "name": "Echo-mmunity",
+  "description": "A community workshop platform for CES, TCC, and ICSO organizations with role-based access control, workshop management, and digital credentialing.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
